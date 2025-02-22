@@ -1,0 +1,17 @@
+{
+    "symbol": "btcUSDT",
+    "interval": "1m",
+    "market_type": "futures",
+    "amount": "1000",
+    "trade_type": "market",
+    "return_percentage": "0.01",
+    "loss_risk_percentage": "0.01",
+    "fee_margin": "1",
+    "trades": {
+        "symbol": "btcUSDT",
+        "trade_type": "market_buy",
+        "price": 99187.4,
+        "market_type": "futures"
+    },
+    "last_trade_id": "27294ba7-0d1a-4c71-ae67-d411c28a04f5"
+}
