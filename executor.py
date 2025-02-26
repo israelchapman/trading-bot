@@ -82,6 +82,17 @@ def save_trade_id(trade_id):
         json.dump(settings, file, indent=4)
 
 
+def load_settings():
+    """Load profit margin and risk loss margin from settings.json."""
+    try:
+        with open(SETTINGS_FILE, "r") as f:
+            settings = json.load(f)
+        return settings.get("return_percentage", 0), settings.get("loss_risk_percentage", 0)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        executor_logger.error(f"Error loading settings: {e}")
+        return 0, 0  # Default to 0 if settings file is missing or corrupted
+
+
 def log_trade_to_excel(trade_id, symbol, trade_type, price, market_type, status, market_condition, ma_200, ma_21, ma_7, ma_5):
     """
     Log trade details into an Excel spreadsheet.
@@ -99,6 +110,10 @@ def log_trade_to_excel(trade_id, symbol, trade_type, price, market_type, status,
         ma_7 (float): Value of the ma_7 moving average.
         ma_5 (float): Value of the ma_5 moving average.
     """
+
+    # Load profit margin and risk loss margin from settings.json
+    return_percentage, loss_risk_percentage = load_settings()
+
     trade_data = {
         "Trade ID": [trade_id],  # Add the unique trade ID
         "Timestamp": [time.strftime('%Y-%m-%d %H:%M:%S')],
@@ -111,7 +126,9 @@ def log_trade_to_excel(trade_id, symbol, trade_type, price, market_type, status,
         "ma_200": [ma_200],
         "ma_21": [ma_21],
         "ma_7": [ma_7],
-        "ma_5": [ma_5]
+        "ma_5": [ma_5],
+        "return percentage": [return_percentage],  # New column
+        "loss risk percentage": [loss_risk_percentage]  # New column
     }
 
     df_new = pd.DataFrame(trade_data)
@@ -328,13 +345,13 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
                 executor_logger.info("Calling calculate_profit_loss method.")  # Ensure method is called
                 projector.calculate_profit_loss()  # This is the method being called
             except Exception as e:
-                executor_logger.error(f"Error during trade execution: {e}")
+                executor_logger.error(f"Error during trade execution 1: {e}")
 
             try:
                 executor_logger.info("Calling filter_open_trades method.")  # Ensure method is called
                 dictator.filter_open_trades()  # This is the method being called
             except Exception as e:
-                executor_logger.error(f"Error during trade execution: {e}")
+                executor_logger.error(f"Error during trade execution 2: {e}")
 
             while not active_open_queue.empty():
                 # Completely clear the queue
