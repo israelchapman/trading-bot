@@ -13,51 +13,82 @@ DICTATOR_OUTPUT_FILE = "dictator_output.xlsx"
 
 
 class Dictator:
-    logger.info("dictator script")
+    def __init__(self):
+        logger.info("dictator script initialized")
 
     @staticmethod
     def calculate_percentage(ma_value, price):
         """Calculate the percentage difference between a moving average and the price."""
-        return round(((ma_value - price) / price) * 100, 2) if price else None
+        if price:
+            percentage = round(((ma_value - price) / price) * 100, 2)
+            logger.debug(f"Calculated percentage: {percentage}% for MA: {ma_value}, Price: {price}")
+            return percentage
+        return None
 
-    @staticmethod
-    def filter_open_trades():
+    def filter_open_trades(self):
         """Filter trades that are open and match trade IDs from projector output, then save them."""
         if not os.path.exists(TRADE_LOG_FILE) or not os.path.exists(PROJECTOR_FILE):
-            logger.error("One or both required Excel files are missing.")
+            logger.error(f"One or both required Excel files are missing. TRADE_LOG_FILE: {TRADE_LOG_FILE}, PROJECTOR_FILE: {PROJECTOR_FILE}")
             return
 
         try:
-            # Load trade log and projector output
+            logger.info("Loading trade log and projector output files...")
             trade_log_df = pd.read_excel(TRADE_LOG_FILE, sheet_name="Trade Log")
             projector_df = pd.read_excel(PROJECTOR_FILE)
 
-            # Get trade IDs from projector output
+            logger.info(f"Loaded {len(trade_log_df)} records from trade log.")
+            logger.info(f"Loaded {len(projector_df)} records from projector output.")
+
+            # Ensure 'Trade ID' is a string in both dataframes
+            trade_log_df["Trade ID"] = trade_log_df["Trade ID"].astype(str)
+            projector_df["Trade ID"] = projector_df["Trade ID"].astype(str)
             valid_trade_ids = set(projector_df["Trade ID"].tolist())
 
-            # Filter trade log for matching trade IDs with 'Open' status
+            # Log unique trade IDs
+            #logger.info(f"Trade Log unique Trade IDs: {trade_log_df['Trade ID'].unique()}")
+            #logger.info(f"Projector unique Trade IDs: {valid_trade_ids}")
+
+            # Ensure 'Status' column formatting
+            trade_log_df["Status"] = trade_log_df["Status"].str.strip().str.capitalize()
+            logger.info(f"Unique status values in trade_log_df: {trade_log_df['Status'].unique()}")
+
+            # Debugging step: Count rows before filtering
+            matching_trade_ids_df = trade_log_df[trade_log_df["Trade ID"].isin(valid_trade_ids)]
+            matching_open_status_df = trade_log_df[trade_log_df["Status"] == "Opened"]
+
+            logger.info(f"Rows Matching Trade IDs: {len(matching_trade_ids_df)}")
+            logger.info(f"Rows with Status 'Open': {len(matching_open_status_df)}")
+
+            # Apply filtering
             filtered_df = trade_log_df[
-                (trade_log_df["Trade ID"].isin(valid_trade_ids)) & (trade_log_df["Status"] == "Open")
+                (trade_log_df["Trade ID"].isin(valid_trade_ids)) & (trade_log_df["Status"] == "Opened")
             ]
+
+            logger.info(f"Filtered {len(filtered_df)} matching open trades.")
 
             if filtered_df.empty:
                 logger.info("No matching open trades found.")
+                logger.debug(f"Sample trade_log_df head: {trade_log_df.head(10)}")
                 return
 
-            # Convert moving averages to percentage
-            for ma in ["ma_200", "ma_21", "ma_7", "ma_5"]:
+            # Check if moving averages columns exist
+            ma_columns = ["ma_200", "ma_21", "ma_7", "ma_5"]
+            for ma in ma_columns:
                 if ma in filtered_df.columns:
+                    logger.info(f"Converting {ma} values to percentages...")
                     filtered_df[f"{ma}_percentage"] = filtered_df.apply(
-                        lambda row: Dictator.calculate_percentage(row[ma], row["Price"]), axis=1
+                        lambda row: self.calculate_percentage(row[ma], row["Price"]), axis=1
                     )
+                else:
+                    logger.warning(f"Moving average column {ma} not found in the filtered data.")
 
             # Save the filtered data to a new Excel file
             filtered_df.to_excel(DICTATOR_OUTPUT_FILE, index=False)
-            logger.info(f"Filtered open trades saved to {DICTATOR_OUTPUT_FILE}")
+            logger.info(f"Saved {len(filtered_df)} filtered open trades to {DICTATOR_OUTPUT_FILE}")
 
         except Exception as e:
             logger.error(f"Error processing trade logs: {e}")
 
-
 if __name__ == "__main__":
-    Dictator.filter_open_trades()
+    dictator = Dictator()
+    dictator.filter_open_trades()

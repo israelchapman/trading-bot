@@ -330,6 +330,12 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
             except Exception as e:
                 executor_logger.error(f"Error during trade execution: {e}")
 
+            try:
+                executor_logger.info("Calling filter_open_trades method.")  # Ensure method is called
+                dictator.filter_open_trades()  # This is the method being called
+            except Exception as e:
+                executor_logger.error(f"Error during trade execution: {e}")
+
             while not active_open_queue.empty():
                 # Completely clear the queue
                 with active_open_queue.mutex:
@@ -363,6 +369,12 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
             try:
                 executor_logger.info("Calling calculate_profit_loss method.")  # Ensure method is called
                 projector.calculate_profit_loss()  # This is the method being called
+            except Exception as e:
+                executor_logger.error(f"Error during trade execution: {e}")
+
+            try:
+                executor_logger.info("Calling filter_open_trades method.")  # Ensure method is called
+                dictator.filter_open_trades()  # This is the method being called
             except Exception as e:
                 executor_logger.error(f"Error during trade execution: {e}")
 
@@ -407,6 +419,12 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
             except Exception as e:
                 executor_logger.error(f"Error during trade execution: {e}")
 
+            try:
+                executor_logger.info("Calling filter_open_trades method.")  # Ensure method is called
+                dictator.filter_open_trades()  # This is the method being called
+            except Exception as e:
+                executor_logger.error(f"Error during trade execution: {e}")
+
             while not active_open_queue.empty():
                 # Completely clear the queue
                 with active_open_queue.mutex:
@@ -437,6 +455,12 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
             try:
                 executor_logger.info("Calling calculate_profit_loss method.")  # Ensure method is called
                 projector.calculate_profit_loss()  # This is the method being called
+            except Exception as e:
+                executor_logger.error(f"Error during trade execution: {e}")
+
+            try:
+                executor_logger.info("Calling filter_open_trades method.")  # Ensure method is called
+                dictator.filter_open_trades()  # This is the method being called
             except Exception as e:
                 executor_logger.error(f"Error during trade execution: {e}")
 

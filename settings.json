@@ -9,9 +9,9 @@
     "fee_margin": "1",
     "trades": {
         "symbol": "btcUSDT",
-        "trade_type": "market_buy",
-        "price": 99187.4,
+        "trade_type": "market_sell",
+        "price": 88813.1,
         "market_type": "futures"
     },
-    "last_trade_id": "27294ba7-0d1a-4c71-ae67-d411c28a04f5"
+    "last_trade_id": "cc74b212-233a-4b62-9240-f08f3cc94623"
 }
