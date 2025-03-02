@@ -72,6 +72,10 @@ class Dictator:
             projector_df["Trade ID"] = projector_df["Trade ID"].astype(str)
             valid_trade_ids = set(projector_df["Trade ID"].tolist())
 
+            # Ensure 'interval' is a string in both dataframes
+            trade_log_df["interval"] = trade_log_df["interval"].astype(str)
+            projector_df["interval"] = projector_df["interval"].astype(str)
+            valid_interval = set(projector_df["interval"].tolist())
             # Log unique trade IDs
             #logger.info(f"Trade Log unique Trade IDs: {trade_log_df['Trade ID'].unique()}")
             #logger.info(f"Projector unique Trade IDs: {valid_trade_ids}")
@@ -83,16 +87,19 @@ class Dictator:
             # Debugging step: Count rows before filtering
             matching_trade_ids_df = trade_log_df[trade_log_df["Trade ID"].isin(valid_trade_ids)]
             matching_open_status_df = trade_log_df[trade_log_df["Status"] == "Opened"]
+            matching_interval_df = trade_log_df[trade_log_df["interval"].isin(valid_interval)]
 
             logger.info(f"Rows Matching Trade IDs: {len(matching_trade_ids_df)}")
             logger.info(f"Rows with Status 'Open': {len(matching_open_status_df)}")
+            logger.info(f"Rows Matching interval: {len(matching_interval_df)}")
 
             # Apply filtering: Match Trade ID, Status is 'Opened', and margins match JSON file
             filtered_df = trade_log_df[
                 (trade_log_df["Trade ID"].isin(valid_trade_ids)) &
                 (trade_log_df["Status"] == "Opened") &
                 (trade_log_df["return percentage"] == return_percentage) &
-                (trade_log_df["loss risk percentage"] == loss_risk_percentage)
+                (trade_log_df["loss risk percentage"] == loss_risk_percentage) &
+                (trade_log_df["interval"].isin(valid_interval))
                 ].copy()
 
             logger.info(f"Filtered {len(filtered_df)} matching open trades.")

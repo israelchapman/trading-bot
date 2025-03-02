@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import logging
 import json
-
+import common
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("projector")
@@ -30,13 +30,15 @@ class Projector:
 
         # Load profit margin and risk loss margin
         return_percentage, loss_risk_percentage = load_settings()
+        settings = common.load_settings()  # Load settings as a dictionary
+        interval = settings.get("interval")  # Extract interval safely
 
         try:
             # Load the trade log
             df = pd.read_excel(EXCEL_FILE, sheet_name="Trade Log")
 
             # Ensure required columns exist
-            required_columns = {"Trade ID", "Trade Type", "Price", "Status"}
+            required_columns = {"Trade ID", "Trade Type", "Price", "Status", "interval"}
             if not required_columns.issubset(df.columns):
                 logger.error("Missing required columns in Excel file.")
                 return
@@ -78,7 +80,8 @@ class Projector:
                         "Profit/Loss": profit_loss,
                         "Status": status,
                         "return percentage": return_percentage,
-                        "loss risk percentage": loss_risk_percentage
+                        "loss risk percentage": loss_risk_percentage,
+                        "interval": interval
                     })
 
                     # Load existing loss trades and filter duplicates
