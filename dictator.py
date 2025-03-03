@@ -38,7 +38,7 @@ class Dictator:
         """Calculate the percentage difference between a moving average and the price."""
         if price:
             percentage = round(((ma_value - price) / price) * 100, 2)
-            logger.debug(f"Calculated percentage: {percentage}% for MA: {ma_value}, Price: {price}")
+            #logger.debug(f"Calculated percentage: {percentage}% for MA: {ma_value}, Price: {price}")
             return percentage
         return None
 
@@ -82,7 +82,7 @@ class Dictator:
 
             # Ensure 'Status' column formatting
             trade_log_df["Status"] = trade_log_df["Status"].str.strip().str.capitalize()
-            logger.info(f"Unique status values in trade_log_df: {trade_log_df['Status'].unique()}")
+            #logger.info(f"Unique status values in trade_log_df: {trade_log_df['Status'].unique()}")
 
             # Debugging step: Count rows before filtering
             matching_trade_ids_df = trade_log_df[trade_log_df["Trade ID"].isin(valid_trade_ids)]

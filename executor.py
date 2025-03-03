@@ -228,7 +228,7 @@ def calculate_200_percentage(symbol, ma_200):
     price = get_current_price(symbol)
     if price:
         percentage = round(((ma_200 - price) / price) * 100, 2)
-        executor_logger.debug(f"Calculated percentage: {percentage}% for MA:200, Price: {price}")
+        #executor_logger.debug(f"Calculated percentage: {percentage}% for MA:200, Price: {price}")
         return percentage
     return None
 
@@ -238,7 +238,7 @@ def calculate_21_percentage(symbol, ma_21):
     price = get_current_price(symbol)
     if price:
         percentage = round(((ma_21 - price) / price) * 100, 2)
-        executor_logger.debug(f"Calculated percentage: {percentage}% for MA:21, Price: {price}")
+        #executor_logger.debug(f"Calculated percentage: {percentage}% for MA:21, Price: {price}")
         return percentage
     return None
 
@@ -248,7 +248,7 @@ def calculate_7_percentage(symbol, ma_7):
     price = get_current_price(symbol)
     if price:
         percentage = round(((ma_7 - price) / price) * 100, 2)
-        executor_logger.debug(f"Calculated percentage: {percentage}% for MA:7, Price: {price}")
+        #executor_logger.debug(f"Calculated percentage: {percentage}% for MA:7, Price: {price}")
         return percentage
     return None
 
@@ -258,7 +258,7 @@ def calculate_5_percentage(symbol, ma_5):
     price = get_current_price(symbol)
     if price:
         percentage = round(((ma_5 - price) / price) * 100, 2)
-        executor_logger.debug(f"Calculated percentage: {percentage}% for MA:5, Price: {price}")
+        #executor_logger.debug(f"Calculated percentage: {percentage}% for MA:5, Price: {price}")
         return percentage
     return None
 
