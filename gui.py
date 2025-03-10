@@ -1,14 +1,8 @@
-import queue
 import logging
 import tkinter as tk
-from threading import Thread, Event
 from tkinter import ttk
 from common import load_settings, save_settings
-from monitoring import monitor_crypto
-import time
-from bot import determine_market_condition
-from bridge import Bridge
-
+from monitor_thread import start_monitoring, stop_monitoring
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -16,120 +10,9 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()]
 )
 
-logging.getLogger("urllib3").setLevel(logging.WARNING)
-
 gui_logger = logging.getLogger("gui")
-monitoring_active = False
-stop_event = Event()
-stop_signal = queue.Queue()
-monitoring_thread = None
-bridge = Bridge()
 
-# Initialize a queue for communication
-signal_queue = queue.Queue()
-active_open_queue = queue.Queue()
-active_sell_queue = queue.Queue()
-
-# active open trade control flag
-active_open_trade = False
-# active close trade control flag
-active_sell_trade = False
-# Monitoring control flag
-monitoring_paused = False
-
-
-def monitor_thread(symbol, interval, market_type):
-    global stop_signal, bridge, monitoring_active, monitoring_paused, active_open_trade, active_sell_trade
-    gui_logger.debug("Monitoring thread started.")
-
-    monitor_crypto(symbol, signal_queue, active_open_queue, active_sell_queue, interval, market_type, stop_event)
-    previous_market_condition = None
-
-    while not stop_event.is_set():
-        if not stop_signal.empty():
-            stop_signal.get()
-            break
-        if monitoring_paused:
-            gui_logger.info("Monitoring is paused. Waiting...")
-            time.sleep(2)
-            continue  # Skip this loop iteration
-
-        market_conditions = determine_market_condition(symbol, market_type)
-        bridge.set_market_condition(market_conditions)
-        gui_logger.debug(f"Previous market condition: {previous_market_condition}, Current market condition: {market_conditions}")
-
-        if market_conditions == previous_market_condition:
-            gui_logger.info(f"Queuing trade for market condition: {market_conditions}")
-
-    monitoring_active = False
-    gui_logger.info("Monitoring thread stopped.")
-
-
-def listen_for_signals():
-    """Listens for pause/resume signals from executor.py and adjusts monitoring."""
-    global monitoring_paused
-    while True:
-        signal = signal_queue.get()
-        if signal == "PAUSE":
-            monitoring_paused = True
-            gui_logger.info("lfs Monitoring paused due to trade execution.")
-        elif signal == "RESUME":
-            monitoring_paused = False
-            gui_logger.info("Monitoring resumed after trade execution.")
-
-
-def listen_for_active_open():
-    """Listens for active trade signals from executor.py and adjusts can execute."""
-    global active_open_trade
-    while True:
-        open_activity = active_open_queue.get()
-        gui_logger.debug(f"Received active open trade signal: {open_activity}")
-        if open_activity == "1":
-            active_open_trade = True
-            gui_logger.info("Active open trade detected.")
-
-
-def listen_for_active_sell():
-    """Listens for active trade signals from executor.py and adjusts can execute."""
-    global active_sell_trade
-    while True:
-        sell_activity = active_sell_queue.get()  # Fix: Use the correct queue
-        if sell_activity == "1":
-            active_sell_trade = True
-            gui_logger.info("Active sell trade detected.")
-
-
-def start_monitoring(symbol, interval, market_type):
-    global monitoring_active, monitoring_thread, bridge
-
-    if monitoring_active:
-        gui_logger.info("Monitoring is already active.")
-        return
-    stop_event.clear()
-    monitoring_active = True
-    monitoring_thread = Thread(target=monitor_thread, args=(symbol, interval, market_type))
-    monitoring_thread.start()
-    gui_logger.info(f"Started monitoring for {symbol} with {interval} interval on {market_type} market.")
-    bridge = Bridge()
-
-    # Start listening for pause/resume signals
-    signal_listener_thread = Thread(target=listen_for_signals)
-    signal_listener_thread.daemon = True
-    signal_listener_thread.start()
-
-
-def stop_monitoring():
-    global monitoring_active, monitoring_thread
-    if not monitoring_active:
-        gui_logger.info("Monitoring is not active.")
-        return
-    stop_signal.put("STOP")
-    gui_logger.info("stop mon stop signal.")
-    stop_event.set()
-    if monitoring_thread and monitoring_thread.is_alive():
-        monitoring_thread.join()
-    monitoring_active = False
-    gui_logger.info("Monitoring stopped successfully.")
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
 def create_gui():

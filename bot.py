@@ -118,7 +118,7 @@ def calculate_market_pressure(prices):
 
 
 # Function to determine market condition and trend strength
-def determine_market_condition(current_price, ma_5, ma_7, ma_21, ma_200):
+def determine_market_condition(current_price, ma_200, ma_21, ma_7, ma_5):
     # Order the values from highest to lowest
     values = sorted(
         [("Current Price", current_price), ("5-MA", ma_5), ("7-MA", ma_7), ("21-MA", ma_21), ("200-MA", ma_200)],

@@ -10,8 +10,9 @@
     "trades": {
         "symbol": "btcUSDT",
         "trade_type": "market_buy",
-        "price": 91496.8,
+        "price": 82265.5,
         "market_type": "futures",
         "interval": "1m"
-    }
+    },
+    "last_trade_id": "2e905a54-7391-4929-80f3-05f76ca1d71a"
 }

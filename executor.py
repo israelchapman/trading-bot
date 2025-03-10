@@ -560,7 +560,6 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
                     projector = Projector()  # This creates the instance
                     dictator = Dictator()
 
-
                     executor_logger.info(f"dictator instance created: {dictator}")
                     executor_logger.info(f"Projector instance created: {projector}")
 
@@ -612,7 +611,6 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
 
                     projector = Projector()  # This creates the instance
                     dictator = Dictator()
-
 
                     executor_logger.info(f"dictator instance created: {dictator}")
                     executor_logger.info(f"Projector instance created: {projector}")
