@@ -5,6 +5,7 @@ from bridge import Bridge
 import time
 import logging
 
+
 # Configure logging to display logs in the terminal
 logging.basicConfig(
     level=logging.DEBUG,
