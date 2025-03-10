@@ -13,6 +13,7 @@ PROJECTOR_FILE = "loss_trades.xlsx"
 DICTATOR_OUTPUT_FILE = "dictator_output.xlsx"
 SETTINGS_FILE = "settings.json"
 
+
 class Dictator:
     def __init__(self):
         logger.info("dictator script initialized")
@@ -45,7 +46,8 @@ class Dictator:
     def filter_open_trades(self):
         """Filter trades that are open and match trade IDs from projector output, then save them."""
         if not os.path.exists(TRADE_LOG_FILE) or not os.path.exists(PROJECTOR_FILE):
-            logger.error(f"One or both required Excel files are missing. TRADE_LOG_FILE: {TRADE_LOG_FILE}, PROJECTOR_FILE: {PROJECTOR_FILE}")
+            logger.error(
+                f"One or both required Excel files are missing. TRADE_LOG_FILE: {TRADE_LOG_FILE}, PROJECTOR_FILE: {PROJECTOR_FILE}")
             return
 
         # Load settings from JSON

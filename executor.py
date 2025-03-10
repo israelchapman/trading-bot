@@ -10,6 +10,7 @@ from openpyxl import Workbook
 import uuid
 from projector import Projector
 from dictator import Dictator
+from config import Config
 
 VALIDATOR_queue = queue.Queue()
 
@@ -436,8 +437,11 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
 
                     projector = Projector()  # This creates the instance
                     dictator = Dictator()
+
+
                     executor_logger.info(f"dictator instance created: {dictator}")
                     executor_logger.info(f"Projector instance created: {projector}")
+
                     try:
                         executor_logger.info("Calling calculate_profit_loss method.")  # Ensure method is called
                         projector.calculate_profit_loss()  # This is the method being called
@@ -449,6 +453,16 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
                         dictator.filter_open_trades()  # This is the method being called
                     except Exception as e:
                         executor_logger.error(f"Error during trade execution 2: {e}")
+
+                    try:
+                        executor_logger.info("Calling confid method.")  # Ensure method is called
+                        executor_logger.info(f"Calling config method with ma_200={ma_200} (type: {type(ma_200)}), "
+                                             f"ma_21={ma_21} (type: {type(ma_21)}), "
+                                             f"ma_7={ma_7} (type: {type(ma_7)}), "
+                                             f"ma_5={ma_5} (type: {type(ma_5)})")  # Log input values
+                        Config.fetch_trade_data()  # This is the method being called
+                    except Exception as e:
+                        executor_logger.error(f"Error during config trade execution: {e}")
 
                     while not active_open_queue.empty():
                         # Completely clear the queue
@@ -479,8 +493,11 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
 
                     projector = Projector()  # This creates the instance
                     dictator = Dictator()
+
+
                     executor_logger.info(f"dictator instance created: {dictator}")
                     executor_logger.info(f"Projector instance created: {projector}")
+
                     try:
                         executor_logger.info("Calling calculate_profit_loss method.")  # Ensure method is called
                         projector.calculate_profit_loss()  # This is the method being called
@@ -492,6 +509,16 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
                         dictator.filter_open_trades()  # This is the method being called
                     except Exception as e:
                         executor_logger.error(f"Error during trade execution: {e}")
+
+                    try:
+                        executor_logger.info("Calling config method.")  # Ensure method is called
+                        executor_logger.info(f"Calling config method with ma_200={ma_200} (type: {type(ma_200)}), "
+                                             f"ma_21={ma_21} (type: {type(ma_21)}), "
+                                             f"ma_7={ma_7} (type: {type(ma_7)}), "
+                                             f"ma_5={ma_5} (type: {type(ma_5)})")  # Log input values
+                        Config.fetch_trade_data()  # This is the method being called
+                    except Exception as e:
+                        executor_logger.error(f"Error during config trade execution: {e}")
 
                     while not active_open_queue.empty():
                         # Completely clear the queue
@@ -532,8 +559,11 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
 
                     projector = Projector()  # This creates the instance
                     dictator = Dictator()
+
+
                     executor_logger.info(f"dictator instance created: {dictator}")
                     executor_logger.info(f"Projector instance created: {projector}")
+
                     try:
                         executor_logger.info("Calling calculate_profit_loss method.")  # Ensure method is called
                         projector.calculate_profit_loss()  # This is the method being called
@@ -544,7 +574,17 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
                         executor_logger.info("Calling filter_open_trades method.")  # Ensure method is called
                         dictator.filter_open_trades()  # This is the method being called
                     except Exception as e:
-                        executor_logger.error(f"Error during trade execution: {e}")
+                        executor_logger.error(f"Error during config trade execution: {e}")
+
+                    try:
+                        executor_logger.info("Calling config method.")  # Ensure method is called
+                        executor_logger.info(f"Calling config method with ma_200={ma_200} (type: {type(ma_200)}), "
+                                             f"ma_21={ma_21} (type: {type(ma_21)}), "
+                                             f"ma_7={ma_7} (type: {type(ma_7)}), "
+                                             f"ma_5={ma_5} (type: {type(ma_5)})")  # Log input values
+                        Config.fetch_trade_data()  # This is the method being called
+                    except Exception as e:
+                        executor_logger.error(f"Error during config trade execution: {e}")
 
                     while not active_open_queue.empty():
                         # Completely clear the queue
@@ -572,8 +612,11 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
 
                     projector = Projector()  # This creates the instance
                     dictator = Dictator()
+
+
                     executor_logger.info(f"dictator instance created: {dictator}")
                     executor_logger.info(f"Projector instance created: {projector}")
+
                     try:
                         executor_logger.info("Calling calculate_profit_loss method.")  # Ensure method is called
                         projector.calculate_profit_loss()  # This is the method being called
@@ -585,6 +628,16 @@ def execute_trade(trade_type, signal_queue, active_open_queue, active_sell_queue
                         dictator.filter_open_trades()  # This is the method being called
                     except Exception as e:
                         executor_logger.error(f"Error during trade execution: {e}")
+
+                    try:
+                        executor_logger.info("Calling config method.")  # Ensure method is called
+                        executor_logger.info(f"Calling config method with ma_200={ma_200} (type: {type(ma_200)}), "
+                                             f"ma_21={ma_21} (type: {type(ma_21)}), "
+                                             f"ma_7={ma_7} (type: {type(ma_7)}), "
+                                             f"ma_5={ma_5} (type: {type(ma_5)})")  # Log input values
+                        Config.fetch_trade_data()  # This is the method being called
+                    except Exception as e:
+                        executor_logger.error(f"Error during config trade execution: {e}")
 
                     while not active_open_queue.empty():
                         # Completely clear the queue
